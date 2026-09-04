@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RITTA's Bim Linktree</title>
+      <!-- favicon (optional) -->
+    <link rel="shortcut icon" href="./assets/BimCenter.png" type="image/x-icon" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 20%, #2563eb 50%, #0891b2 100%);
+            color: #1a1a1a;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+            padding: 28px 18px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.02));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo {
+            width: 96px;
+            height: 96px;
+            background: transparent; /* no frame */
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: none; /* remove faint frame/shadow */
+            padding: 0;
+            overflow: hidden; /* crop image to circle */
+            border: none;
+        }
+
+        .logo-img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover; /* ensure image covers the circle */
+            border-radius: 50%;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+            text-shadow: 0 2px 0 rgba(0,0,0,0.25);
+        }
+
+        .youtube-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: #1a1a1a;
+            border: 2px solid #1a1a1a;
+            border-radius: 8px;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .youtube-link:hover {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        /* Dropdown Section */
+        .section {
+            margin-bottom: 12px;
+        }
+
+        .dropdown-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 18px 24px;
+            background: #ffffff;
+            border: 3px solid #1a1a1a;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 0 #1a1a1a;
+            position: relative;
+        }
+
+        .dropdown-header:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #1a1a1a;
+        }
+
+        .dropdown-header:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #1a1a1a;
+        }
+
+        .dropdown-header.active {
+            border-radius: 24px 24px 0 0;
+            border-bottom: none;
+            padding-bottom: 21px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dropdown-title {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            flex: 1;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .dropdown-arrow {
+            font-size: 12px;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #9ca3af;
+            margin-left: auto;
+        }
+
+        .dropdown-arrow.active {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            background: #ffffff;
+            border: 3px solid #1a1a1a;
+            border-top: none;
+            border-radius: 0 0 24px 24px;
+            box-shadow: 0 6px 0 #1a1a1a;
+            position: relative;
+            opacity: 0;
+        }
+
+        .dropdown-content.active {
+            max-height: 1000px;
+            opacity: 1;
+        }
+
+        .dropdown-inner {
+            padding: 8px 16px 20px 16px;
+        }
+
+        /* Simple Button */
+        .simple-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 14px 24px;
+            background: #f3f4f6;
+            border: 2px solid #d1d5db;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1a1a1a;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            margin-bottom: 10px;
+            box-shadow: 0 3px 0 #d1d5db;
+        }
+
+        .simple-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .simple-btn:hover {
+            background: #e5e7eb;
+            transform: translateY(1px);
+            box-shadow: 0 2px 0 #d1d5db;
+        }
+
+        .simple-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #d1d5db;
+        }
+
+        /* Footer Button */
+        .footer {
+            margin-top: 32px;
+            text-align: center;
+        }
+
+        .footer-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 32px;
+            background: #ffffff;
+            border: 3px solid #1a1a1a;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a1a;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #1a1a1a;
+        }
+
+        .footer-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 3px 0 #1a1a1a;
+        }
+
+        .footer-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #1a1a1a;
+        }
+
+        .footer-btn strong {
+            color: #ef4444;
+        }
+
+        .footer-links {
+            margin-top: 24px;
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: #ffffff;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            body {
+                padding: 32px 16px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .title {
+                font-size: 18px;
+            }
+
+            .logo {
+                width: 80px;
+                height: 80px;
+                padding: 0;
+            }
+
+            .dropdown-header {
+                font-size: 14px;
+                padding: 16px 20px;
+            }
+
+            .simple-btn {
+                font-size: 14px;
+                padding: 14px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <img src="./assets/BimCenter.png" alt="Ritta Logo" class="logo-img" />
+            </div>
+            <h1 class="title">RITTA's Revit Add-in</h1>
+        </div>
+
+        <!-- Section 1: Installation Ritta pyrevit -->
+        <div class="section">
+            <button class="dropdown-header" onclick="toggleDropdown(this)">
+                <div class="dropdown-title">
+                    <span>💼 การติดตั้ง Ritta pyrevit</span>
+                </div>
+                <span class="dropdown-arrow">▼</span>
+            </button>
+            <div class="dropdown-content">
+                <div class="dropdown-inner">
+                    <a href="https://github.com/pyrevitlabs/pyRevit/releases" target="_blank" class="simple-btn">🔗 ลิงค์ดาวโหลด pyrevit</a>
+                    <a href="https://rittacoth-my.sharepoint.com/:f:/g/personal/phacharakorn_ritta_co_th/IgBHb3hCavR3RLGjgQ9PPFgtARuSSVlAt1f8sy8rBKcH0ek?e=aBsQPu" target="_blank" class="simple-btn">⬇️ ดาวน์โหลด Add-in Ritta pyrevit V2.0</a>
+                    <a href="https://rittacoth-my.sharepoint.com/:v:/g/personal/phacharakorn_ritta_co_th/EaOZtpdLHAtElZDFgtpnGWEBKqkNpxDMMbP6kZFJ__Hxeg?e=GCKuAE" target="_blank" class="simple-btn">🎥 วิดีโอการติดตั้ง Add-in Ritta pyrevit</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: License -->
+        <div class="section">
+            <button class="dropdown-header" onclick="toggleDropdown(this)">
+                <div class="dropdown-title">
+                    <span>🔒 การขอ License Ritta pyrevit</span>
+                </div>
+                <span class="dropdown-arrow">▼</span>
+            </button>
+            <div class="dropdown-content">
+                <div class="dropdown-inner">
+                    <a href="https://www.youtube.com/watch?v=yvffrxj1D9E" target="_blank" class="simple-btn">🎥 วิดีโอการขอ License Ritta pyrevit</a>
+                    <a href="https://rittatools.getgrist.com/forms/ttbETkjaYiZaECPzp7tP4v/41" target="_blank" class="simple-btn">📖 ฟอร์มลงทะเบียนขอรับ License</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Tools on Add-ins -->
+        <div class="section">
+            <button class="dropdown-header" onclick="toggleDropdown(this)">
+                <div class="dropdown-title">
+                    <span>⚒️ เครื่องมือ Ritta pyrevit</span>
+                </div>
+                <span class="dropdown-arrow">▼</span>
+            </button>
+            <div class="dropdown-content">
+                <div class="dropdown-inner">
+                    <a href="https://rittacoth-my.sharepoint.com/:p:/g/personal/phacharakorn_ritta_co_th/IQCILlKBrGmhSIoJwQVZBBX3AQJ5lYVs2DPquNMarjGtf3M?e=WZtqA3" target="_blank" class="simple-btn">📋 คู่มือการใช้งาน Add-in Ritta</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Ritta BQC KPI Modeler -->
+        <div class="section">
+            <button class="dropdown-header" onclick="toggleDropdown(this)">
+                <div class="dropdown-title">
+                    <span>📊 RITTA BQC - KPI Modeler</span>
+                </div>
+                <span class="dropdown-arrow">▼</span>
+            </button>
+            <div class="dropdown-content">
+                <div class="dropdown-inner">
+                    <a href="https://rittacoth.sharepoint.com/:b:/s/BIMResearchDevelopment/IQA9xpKXKfyLR4-I06y0O0aEAbO6m_omshwr-tdoJH-TyRk?e=fGwRO4" target="_blank" class="simple-btn">📩 KPI Modeler หัวข้อการตรวจ </a>
+                    <a href="https://rittacoth.sharepoint.com/:p:/s/BIMResearchDevelopment/IQBme2H0UT4KRpc7UI9Zg_ovASLeVcPEJw5OW-5gjaxWFNw?e=gJpXFr" target="_blank" class="simple-btn">🧩 การตรวจ KPI ด้วยตัวเอง(pyrevit+PowerBI)</a>
+                    <a href="https://rittacoth-my.sharepoint.com/:v:/g/personal/phacharakorn_ritta_co_th/IQDSxIan3oNaQYxbTbRVFPIoAT_P86dJ8tFCmyAfAOdMBrE?e=yeUB5F" target="_blank" class="simple-btn">🎥 วิดีโอการตรวจ KPI ด้วยตัวเอง(pyrevit+PowerBI)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Line OA Bim Ritta -->
+        <div class="section">
+            <button class="dropdown-header" onclick="toggleDropdown(this)">
+                <div class="dropdown-title">
+                    <span>มีปัญหาการใช้งานติดต่อ Line OA</span>
+                </div>
+                <span class="dropdown-arrow">▼</span>
+            </button>
+            <div class="dropdown-content">
+                <div class="dropdown-inner">
+                    <a href="https://line.me/R/ti/p/%40748afrxu?oat__id=1218305" target="_blank" class="simple-btn">💬 เพิ่มเพื่อน Line Official</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <a href="#" class="footer-btn">We make the impossible&nbsp;<strong>POSSIBLE</strong></a>
+        </div>
+    </div>
+
+    <script>
+        function toggleDropdown(header) {
+            const content = header.nextElementSibling;
+            const arrow = header.querySelector('.dropdown-arrow');
+            const isActive = content.classList.contains('active');
+            
+            // Close all dropdowns
+            document.querySelectorAll('.dropdown-content').forEach(dc => {
+                dc.classList.remove('active');
+            });
+            document.querySelectorAll('.dropdown-header').forEach(dh => {
+                dh.classList.remove('active');
+            });
+            document.querySelectorAll('.dropdown-arrow').forEach(da => {
+                da.classList.remove('active');
+            });
+            
+            // If it wasn't active, open it
+            if (!isActive) {
+                content.classList.add('active');
+                header.classList.add('active');
+                arrow.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
