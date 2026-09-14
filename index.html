@@ -82,8 +82,8 @@ body::before{
 
 .logo{
   position:relative;
-  width:104px;
-  height:104px;
+  width:132px;
+  height:132px;
   margin:0 auto 18px;
   display:grid;
   place-items:center;
@@ -111,8 +111,8 @@ body::before{
 .logo-img{
   position:relative;
   z-index:1;
-  width:88px;
-  height:88px;
+  width:116px;
+  height:116px;
   border-radius:50%;
   object-fit:cover;
   display:block;
@@ -305,6 +305,15 @@ body::before{
 /* ---------- ท้ายหน้า ---------- */
 .footer{margin-top:36px;text-align:center}
 
+.footer-logo{
+  display:block;
+  margin:0 auto 16px;
+  max-width:150px;
+  width:100%;
+  height:auto;
+  opacity:.95;
+}
+
 .footer-btn{
   position:relative;
   display:inline-flex;
@@ -354,13 +363,14 @@ body::before{
 @media (max-width:640px){
   body{padding:40px 16px 56px}
   .title{font-size:20px}
-  .logo{width:92px;height:92px}
-  .logo-img{width:78px;height:78px}
+  .logo{width:116px;height:116px}
+  .logo-img{width:102px;height:102px}
   .section{border-radius:22px}
   .dropdown-header{font-size:14.5px;padding:15px 16px;gap:12px}
   .dropdown-content > div{padding:0 12px}
   .icon{width:35px;height:35px}
   .simple-btn{font-size:14px}
+  .footer-logo{max-width:120px}
 }
 
 /* ---------- เคารพการตั้งค่าลดการเคลื่อนไหว ---------- */
@@ -469,6 +479,7 @@ body::before{
 
   <!-- ท้ายหน้า -->
   <div class="footer rise" style="--d:.58s">
+    <img src="./assets/logoRT.png" alt="โลโก้ RT" class="footer-logo" />
     <a href="#" class="footer-btn">We make the impossible<strong>POSSIBLE</strong></a>
     <p class="note">RITTA BIM Research &amp; Development</p>
   </div>
