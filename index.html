@@ -1,423 +1,526 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RITTA's Bim Linktree</title>
-      <!-- favicon (optional) -->
-    <link rel="shortcut icon" href="./assets/BimCenter.png" type="image/x-icon" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#071633">
+<title>RITTA's Revit Add-in</title>
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 20%, #2563eb 50%, #0891b2 100%);
-            color: #1a1a1a;
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-        }
+<link rel="shortcut icon" href="./assets/BimCenter.png" type="image/x-icon" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-        .container {
-            max-width: 420px;
-            width: 100%;
-        }
+<style>
+:root{
+  --ink:        #08152c;
+  --navy:       #0b2350;
+  --blueprint:  #1b4fa8;
+  --cyan:       #38bdf8;
+  --paper:      #f7fafc;
+  --line:       rgba(255,255,255,.16);
+  --ease:       cubic-bezier(.16,1,.3,1);
+}
 
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 28px;
-            padding: 28px 18px;
-            border-radius: 12px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.02));
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+*{margin:0;padding:0;box-sizing:border-box}
 
-        .logo {
-            width: 96px;
-            height: 96px;
-            background: transparent; /* no frame */
-            border-radius: 50%;
-            margin: 0 auto 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: none; /* remove faint frame/shadow */
-            padding: 0;
-            overflow: hidden; /* crop image to circle */
-            border: none;
-        }
+html{-webkit-text-size-adjust:100%}
 
-        .logo-img {
-            width: 100%;
-            height: 100%;
-            display: block;
-            object-fit: cover; /* ensure image covers the circle */
-            border-radius: 50%;
-        }
+body{
+  font-family:'IBM Plex Sans Thai','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  color:var(--paper);
+  line-height:1.6;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  padding:56px 20px 72px;
+  background:
+    radial-gradient(120% 80% at 12% -10%, #1d5fbd 0%, transparent 55%),
+    radial-gradient(110% 70% at 92% 8%, #0e7490 0%, transparent 50%),
+    linear-gradient(168deg, #061229 0%, var(--navy) 42%, #12468f 72%, #0b5f78 100%);
+  background-attachment:fixed;
+  overflow-x:hidden;
+}
 
-        .title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #ffffff;
-            margin: 0;
-            text-shadow: 0 2px 0 rgba(0,0,0,0.25);
-        }
+/* ---------- ฉากหลัง: กริดแบบแบบแปลน ค่อย ๆ ไหลช้า ๆ ---------- */
+body::before{
+  content:"";
+  position:fixed;
+  inset:-60px;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px);
+  background-size:46px 46px;
+  -webkit-mask-image:radial-gradient(75% 60% at 50% 22%, #000 0%, transparent 82%);
+          mask-image:radial-gradient(75% 60% at 50% 22%, #000 0%, transparent 82%);
+  animation:drift 46s linear infinite;
+}
+@keyframes drift{to{background-position:46px 46px, 46px 46px}}
 
-        .youtube-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background: #1a1a1a;
-            border: 2px solid #1a1a1a;
-            border-radius: 8px;
-            color: #ffffff;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
-        }
+/* ---------- โครงหน้า ---------- */
+.container{
+  position:relative;
+  width:100%;
+  max-width:440px;
+}
 
-        .youtube-link:hover {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
-        }
+/* ปรากฏตอนโหลดหน้า: ไล่ทีละชิ้น ครั้งเดียวจบ */
+.rise{
+  opacity:0;
+  translate:0 14px;
+  animation:rise .8s var(--ease) forwards;
+  animation-delay:var(--d,0s);
+}
+@keyframes rise{to{opacity:1;translate:0 0}}
 
-        /* Dropdown Section */
-        .section {
-            margin-bottom: 12px;
-        }
+/* ---------- หัวหน้า ---------- */
+.header{
+  text-align:center;
+  margin-bottom:34px;
+}
 
-        .dropdown-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            padding: 18px 24px;
-            background: #ffffff;
-            border: 3px solid #1a1a1a;
-            border-radius: 50px;
-            font-size: 15px;
-            font-weight: 600;
-            color: #1a1a1a;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 6px 0 #1a1a1a;
-            position: relative;
-        }
+.logo{
+  position:relative;
+  width:104px;
+  height:104px;
+  margin:0 auto 18px;
+  display:grid;
+  place-items:center;
+}
+/* วงแหวนเส้นประ หมุนช้า ๆ เหมือนวงโคจรใน CAD */
+.logo::before{
+  content:"";
+  position:absolute;
+  inset:-9px;
+  border-radius:50%;
+  border:1.5px dashed rgba(255,255,255,.38);
+  animation:spin 26s linear infinite;
+}
+.logo::after{
+  content:"";
+  position:absolute;
+  inset:-22px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(56,189,248,.34) 0%, transparent 68%);
+  animation:breathe 6s ease-in-out infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes breathe{50%{transform:scale(1.12);opacity:.65}}
 
-        .dropdown-header:hover {
-            transform: translateY(2px);
-            box-shadow: 0 4px 0 #1a1a1a;
-        }
+.logo-img{
+  position:relative;
+  z-index:1;
+  width:88px;
+  height:88px;
+  border-radius:50%;
+  object-fit:cover;
+  display:block;
+}
 
-        .dropdown-header:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #1a1a1a;
-        }
+.title{
+  font-size:23px;
+  font-weight:700;
+  letter-spacing:.2px;
+}
 
-        .dropdown-header.active {
-            border-radius: 24px 24px 0 0;
-            border-bottom: none;
-            padding-bottom: 21px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+.tagline{
+  margin-top:6px;
+  font-size:14px;
+  font-weight:400;
+  color:rgba(233,244,255,.72);
+}
 
-        .dropdown-title {
-            display: flex;
-            align-items: center;
-            gap: 0;
-            flex: 1;
-            text-align: center;
-            justify-content: center;
-        }
+/* ---------- แถบหัวข้อแบบพับได้ ---------- */
+/* กรอบห่อทั้ง section: หัวข้อกับเนื้อหาอยู่ในการ์ดใบเดียวกัน */
+.section{
+  position:relative;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  border-radius:24px;
+  background:rgba(255,255,255,.09);
+  -webkit-backdrop-filter:blur(14px);
+          backdrop-filter:blur(14px);
+  box-shadow:0 14px 34px -22px rgba(2,10,28,.9);
+  overflow:hidden;
+  transition:background .35s var(--ease), border-color .35s var(--ease),
+             transform .35s var(--ease), box-shadow .35s var(--ease);
+}
 
-        .dropdown-arrow {
-            font-size: 12px;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            color: #9ca3af;
-            margin-left: auto;
-        }
+.section:hover{
+  background:rgba(255,255,255,.13);
+  border-color:rgba(255,255,255,.3);
+  transform:translateY(-2px);
+  box-shadow:0 20px 40px -22px rgba(2,10,28,1);
+}
 
-        .dropdown-arrow.active {
-            transform: rotate(180deg);
-        }
+.section:has(.dropdown-header[aria-expanded="true"]){
+  background:rgba(255,255,255,.15);
+  border-color:rgba(255,255,255,.34);
+  box-shadow:0 22px 44px -20px rgba(2,10,28,1);
+}
 
-        .dropdown-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-            background: #ffffff;
-            border: 3px solid #1a1a1a;
-            border-top: none;
-            border-radius: 0 0 24px 24px;
-            box-shadow: 0 6px 0 #1a1a1a;
-            position: relative;
-            opacity: 0;
-        }
+.dropdown-header{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  width:100%;
+  padding:16px 18px;
+  font:inherit;
+  font-size:15.5px;
+  font-weight:600;
+  text-align:left;
+  color:var(--paper);
+  cursor:pointer;
+  border:0;
+  background:transparent;
+  overflow:hidden;
+}
+/* แสงนุ่ม ๆ วิ่งตามเมาส์ */
+.dropdown-header::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(220px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.16), transparent 62%);
+  opacity:0;
+  transition:opacity .35s ease;
+}
+.dropdown-header:hover::before{opacity:1}
+.section:active{transform:translateY(0) scale(.995)}
 
-        .dropdown-content.active {
-            max-height: 1000px;
-            opacity: 1;
-        }
+.icon{
+  flex:none;
+  display:grid;
+  place-items:center;
+  width:38px;
+  height:38px;
+  font-size:17px;
+  border-radius:12px;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.16);
+  transition:transform .45s var(--ease), background .35s ease;
+}
+.dropdown-header:hover .icon{transform:rotate(-6deg) scale(1.06)}
+.dropdown-header[aria-expanded="true"] .icon{
+  background:rgba(56,189,248,.34);
+  transform:none;
+}
 
-        .dropdown-inner {
-            padding: 8px 16px 20px 16px;
-        }
+.label{flex:1;min-width:0}
 
-        /* Simple Button */
-        .simple-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 14px 24px;
-            background: #f3f4f6;
-            border: 2px solid #d1d5db;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #1a1a1a;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            margin-bottom: 10px;
-            box-shadow: 0 3px 0 #d1d5db;
-        }
+.chevron{
+  flex:none;
+  width:16px;
+  height:16px;
+  opacity:.75;
+  transition:transform .45s var(--ease), opacity .3s ease;
+}
+.dropdown-header[aria-expanded="true"] .chevron{transform:rotate(180deg);opacity:1}
 
-        .simple-btn:last-child {
-            margin-bottom: 0;
-        }
+/* ---------- เนื้อหาข้างใน: เปิด-ปิดแบบไหลลื่น ---------- */
+.dropdown-content{
+  display:grid;
+  grid-template-rows:0fr;
+  visibility:hidden;
+  transition:grid-template-rows .45s var(--ease),
+             visibility 0s linear .45s;
+}
+.dropdown-content > div{
+  position:relative;
+  overflow:hidden;
+  padding:0 14px;   /* เว้นเฉพาะแนวนอน แนวตั้งใช้ margin ของลิงก์ ไม่งั้นตอนพับจะเหลือช่องว่างค้าง */
+}
+/* เส้นคั่นระหว่างหัวข้อกับเนื้อหา */
+.dropdown-content > div::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:2px;
+  right:2px;
+  height:1px;
+  background:rgba(255,255,255,.16);
+}
 
-        .simple-btn:hover {
-            background: #e5e7eb;
-            transform: translateY(1px);
-            box-shadow: 0 2px 0 #d1d5db;
-        }
+.dropdown-header[aria-expanded="true"] + .dropdown-content{
+  grid-template-rows:1fr;
+  visibility:visible;
+  transition:grid-template-rows .5s var(--ease), visibility 0s;
+}
 
-        .simple-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #d1d5db;
-        }
+.simple-btn{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 16px;
+  margin-bottom:8px;
+  font-size:14.5px;
+  font-weight:500;
+  color:var(--paper);
+  text-decoration:none;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:16px;
+  background:rgba(255,255,255,.07);
+  -webkit-backdrop-filter:blur(10px);
+          backdrop-filter:blur(10px);
+  opacity:0;
+  transform:translateY(10px);
+  transition:opacity .4s var(--ease), transform .4s var(--ease),
+             background .25s ease, border-color .25s ease;
+}
+.simple-btn:first-child{margin-top:14px}
+.simple-btn:last-child{margin-bottom:16px}
 
-        /* Footer Button */
-        .footer {
-            margin-top: 32px;
-            text-align: center;
-        }
+/* ไล่ปรากฏทีละปุ่มตอนกางออก */
+.dropdown-header[aria-expanded="true"] + .dropdown-content .simple-btn{
+  opacity:1;
+  transform:none;
+}
+.dropdown-content .simple-btn:nth-child(1){transition-delay:.06s}
+.dropdown-content .simple-btn:nth-child(2){transition-delay:.12s}
+.dropdown-content .simple-btn:nth-child(3){transition-delay:.18s}
+.dropdown-content .simple-btn:nth-child(4){transition-delay:.24s}
 
-        .footer-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 14px 32px;
-            background: #ffffff;
-            border: 3px solid #1a1a1a;
-            border-radius: 50px;
-            font-size: 15px;
-            font-weight: 600;
-            color: #1a1a1a;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            box-shadow: 0 5px 0 #1a1a1a;
-        }
+.simple-btn:hover{
+  background:rgba(255,255,255,.15);
+  border-color:rgba(255,255,255,.3);
+}
+.simple-btn:active{transform:scale(.985)}
 
-        .footer-btn:hover {
-            transform: translateY(2px);
-            box-shadow: 0 3px 0 #1a1a1a;
-        }
+.btn-emoji{flex:none;font-size:16px}
+.btn-text{flex:1}
 
-        .footer-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 2px 0 #1a1a1a;
-        }
+.go{
+  flex:none;
+  width:15px;
+  height:15px;
+  opacity:0;
+  transform:translateX(-6px);
+  transition:opacity .3s var(--ease), transform .3s var(--ease);
+}
+.simple-btn:hover .go,
+.simple-btn:focus-visible .go{opacity:.9;transform:none}
 
-        .footer-btn strong {
-            color: #ef4444;
-        }
+/* ---------- ท้ายหน้า ---------- */
+.footer{margin-top:36px;text-align:center}
 
-        .footer-links {
-            margin-top: 24px;
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            font-size: 13px;
-        }
+.footer-btn{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:15px 34px;
+  font-size:14.5px;
+  font-weight:600;
+  letter-spacing:.3px;
+  color:var(--ink);
+  text-decoration:none;
+  border-radius:50px;
+  background:linear-gradient(100deg,#ffffff 0%,#dff2ff 52%,#ffffff 100%);
+  box-shadow:0 18px 38px -20px rgba(3,12,32,.95);
+  overflow:hidden;
+  transition:transform .35s var(--ease), box-shadow .35s var(--ease);
+}
+/* แสงกวาดผ่านช้า ๆ จุดเดียวของหน้าที่กล้าใช้ลูกเล่น */
+.footer-btn::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-140%;
+  width:60%;
+  height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.9),transparent);
+  animation:sweep 5.5s ease-in-out infinite;
+}
+@keyframes sweep{0%,55%{left:-140%}100%{left:160%}}
+.footer-btn:hover{transform:translateY(-3px);box-shadow:0 24px 44px -20px rgba(3,12,32,1)}
+.footer-btn:active{transform:translateY(-1px)}
+.footer-btn strong{color:#e11d48;margin-left:.35em}
 
-        .footer-link {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
+.note{
+  margin-top:18px;
+  font-size:12.5px;
+  color:rgba(226,240,255,.6);
+}
 
-        .footer-link:hover {
-            color: #ffffff;
-        }
+/* ---------- โฟกัสด้วยคีย์บอร์ด ---------- */
+:focus-visible{
+  outline:2px solid var(--cyan);
+  outline-offset:3px;
+}
 
-        /* Responsive */
-        @media (max-width: 640px) {
-            body {
-                padding: 32px 16px;
-            }
+/* ---------- จอเล็ก ---------- */
+@media (max-width:640px){
+  body{padding:40px 16px 56px}
+  .title{font-size:20px}
+  .logo{width:92px;height:92px}
+  .logo-img{width:78px;height:78px}
+  .section{border-radius:22px}
+  .dropdown-header{font-size:14.5px;padding:15px 16px;gap:12px}
+  .dropdown-content > div{padding:0 12px}
+  .icon{width:35px;height:35px}
+  .simple-btn{font-size:14px}
+}
 
-            .container {
-                max-width: 100%;
-            }
-
-            .title {
-                font-size: 18px;
-            }
-
-            .logo {
-                width: 80px;
-                height: 80px;
-                padding: 0;
-            }
-
-            .dropdown-header {
-                font-size: 14px;
-                padding: 16px 20px;
-            }
-
-            .simple-btn {
-                font-size: 14px;
-                padding: 14px 20px;
-            }
-        }
-    </style>
+/* ---------- เคารพการตั้งค่าลดการเคลื่อนไหว ---------- */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001s !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001s !important;
+  }
+  .rise{opacity:1;translate:none}
+}
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="logo">
-                <img src="./assets/BimCenter.png" alt="Ritta Logo" class="logo-img" />
-            </div>
-            <h1 class="title">RITTA's Revit Add-in</h1>
-        </div>
+<div class="container">
 
-        <!-- Section 1: Installation Ritta pyrevit -->
-        <div class="section">
-            <button class="dropdown-header" onclick="toggleDropdown(this)">
-                <div class="dropdown-title">
-                    <span>💼 การติดตั้ง Ritta pyrevit</span>
-                </div>
-                <span class="dropdown-arrow">▼</span>
-            </button>
-            <div class="dropdown-content">
-                <div class="dropdown-inner">
-                    <a href="https://github.com/pyrevitlabs/pyRevit/releases" target="_blank" class="simple-btn">🔗 ลิงค์ดาวโหลด pyrevit</a>
-                    <a href="https://rittacoth-my.sharepoint.com/:f:/g/personal/phacharakorn_ritta_co_th/IgBHb3hCavR3RLGjgQ9PPFgtARuSSVlAt1f8sy8rBKcH0ek?e=aBsQPu" target="_blank" class="simple-btn">⬇️ ดาวน์โหลด Add-in Ritta pyrevit V2.0</a>
-                    <a href="https://rittacoth-my.sharepoint.com/:v:/g/personal/phacharakorn_ritta_co_th/EaOZtpdLHAtElZDFgtpnGWEBKqkNpxDMMbP6kZFJ__Hxeg?e=GCKuAE" target="_blank" class="simple-btn">🎥 วิดีโอการติดตั้ง Add-in Ritta pyrevit</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section 2: License -->
-        <div class="section">
-            <button class="dropdown-header" onclick="toggleDropdown(this)">
-                <div class="dropdown-title">
-                    <span>🔒 การขอ License Ritta pyrevit</span>
-                </div>
-                <span class="dropdown-arrow">▼</span>
-            </button>
-            <div class="dropdown-content">
-                <div class="dropdown-inner">
-                    <a href="https://www.youtube.com/watch?v=yvffrxj1D9E" target="_blank" class="simple-btn">🎥 วิดีโอการขอ License Ritta pyrevit</a>
-                    <a href="https://rittatools.getgrist.com/forms/ttbETkjaYiZaECPzp7tP4v/41" target="_blank" class="simple-btn">📖 ฟอร์มลงทะเบียนขอรับ License</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section 3: Tools on Add-ins -->
-        <div class="section">
-            <button class="dropdown-header" onclick="toggleDropdown(this)">
-                <div class="dropdown-title">
-                    <span>⚒️ เครื่องมือ Ritta pyrevit</span>
-                </div>
-                <span class="dropdown-arrow">▼</span>
-            </button>
-            <div class="dropdown-content">
-                <div class="dropdown-inner">
-                    <a href="https://rittacoth-my.sharepoint.com/:p:/g/personal/phacharakorn_ritta_co_th/IQCILlKBrGmhSIoJwQVZBBX3AQJ5lYVs2DPquNMarjGtf3M?e=WZtqA3" target="_blank" class="simple-btn">📋 คู่มือการใช้งาน Add-in Ritta</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section 4: Ritta BQC KPI Modeler -->
-        <div class="section">
-            <button class="dropdown-header" onclick="toggleDropdown(this)">
-                <div class="dropdown-title">
-                    <span>📊 RITTA BQC - KPI Modeler</span>
-                </div>
-                <span class="dropdown-arrow">▼</span>
-            </button>
-            <div class="dropdown-content">
-                <div class="dropdown-inner">
-                    <a href="https://rittacoth.sharepoint.com/:b:/s/BIMResearchDevelopment/IQA9xpKXKfyLR4-I06y0O0aEAbO6m_omshwr-tdoJH-TyRk?e=fGwRO4" target="_blank" class="simple-btn">📩 KPI Modeler หัวข้อการตรวจ </a>
-                    <a href="https://rittacoth.sharepoint.com/:p:/s/BIMResearchDevelopment/IQBme2H0UT4KRpc7UI9Zg_ovASLeVcPEJw5OW-5gjaxWFNw?e=gJpXFr" target="_blank" class="simple-btn">🧩 การตรวจ KPI ด้วยตัวเอง(pyrevit+PowerBI)</a>
-                    <a href="https://rittacoth-my.sharepoint.com/:v:/g/personal/phacharakorn_ritta_co_th/IQDSxIan3oNaQYxbTbRVFPIoAT_P86dJ8tFCmyAfAOdMBrE?e=yeUB5F" target="_blank" class="simple-btn">🎥 วิดีโอการตรวจ KPI ด้วยตัวเอง(pyrevit+PowerBI)</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section 4: Line OA Bim Ritta -->
-        <div class="section">
-            <button class="dropdown-header" onclick="toggleDropdown(this)">
-                <div class="dropdown-title">
-                    <span>มีปัญหาการใช้งานติดต่อ Line OA</span>
-                </div>
-                <span class="dropdown-arrow">▼</span>
-            </button>
-            <div class="dropdown-content">
-                <div class="dropdown-inner">
-                    <a href="https://line.me/R/ti/p/%40748afrxu?oat__id=1218305" target="_blank" class="simple-btn">💬 เพิ่มเพื่อน Line Official</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            <a href="#" class="footer-btn">We make the impossible&nbsp;<strong>POSSIBLE</strong></a>
-        </div>
+  <!-- หัวหน้า -->
+  <header class="header rise" style="--d:.05s">
+    <div class="logo">
+      <img src="./assets/BimCenter.png" alt="โลโก้ RITTA BIM" class="logo-img" />
     </div>
+    <h1 class="title">RITTA's Revit Add-in</h1>
+    <p class="tagline">รวมลิงก์ติดตั้ง คู่มือ และเครื่องมือ BIM ไว้ที่เดียว</p>
+  </header>
 
-    <script>
-        function toggleDropdown(header) {
-            const content = header.nextElementSibling;
-            const arrow = header.querySelector('.dropdown-arrow');
-            const isActive = content.classList.contains('active');
-            
-            // Close all dropdowns
-            document.querySelectorAll('.dropdown-content').forEach(dc => {
-                dc.classList.remove('active');
-            });
-            document.querySelectorAll('.dropdown-header').forEach(dh => {
-                dh.classList.remove('active');
-            });
-            document.querySelectorAll('.dropdown-arrow').forEach(da => {
-                da.classList.remove('active');
-            });
-            
-            // If it wasn't active, open it
-            if (!isActive) {
-                content.classList.add('active');
-                header.classList.add('active');
-                arrow.classList.add('active');
-            }
-        }
-    </script>
+  <!-- 1. การติดตั้ง -->
+  <section class="section rise" style="--d:.16s">
+    <button class="dropdown-header" aria-expanded="false" onclick="toggleDropdown(this)">
+      <span class="icon">💼</span>
+      <span class="label">การติดตั้ง Ritta pyRevit</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="dropdown-content">
+      <div>
+        <a href="https://github.com/pyrevitlabs/pyRevit/releases" target="_blank" rel="noopener" class="simple-btn">
+          <span class="btn-emoji">🔗</span><span class="btn-text">ลิงก์ดาวน์โหลด pyRevit</span>
+          <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </a>
+        <a href="https://rittacoth-my.sharepoint.com/:f:/g/personal/phacharakorn_ritta_co_th/IgBHb3hCavR3RLGjgQ9PPFgtARuSSVlAt1f8sy8rBKcH0ek?e=aBsQPu" target="_blank" rel="noopener" class="simple-btn">
+          <span class="btn-emoji">⬇️</span><span class="btn-text">ดาวน์โหลด Add-in Ritta pyRevit V2.0</span>
+          <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </a>
+        <a href="https://rittacoth-my.sharepoint.com/:v:/g/personal/phacharakorn_ritta_co_th/EaOZtpdLHAtElZDFgtpnGWEBKqkNpxDMMbP6kZFJ__Hxeg?e=GCKuAE" target="_blank" rel="noopener" class="simple-btn">
+          <span class="btn-emoji">🎥</span><span class="btn-text">วิดีโอการติดตั้ง Add-in Ritta pyRevit</span>
+          <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. License -->
+  <section class="section rise" style="--d:.24s">
+    <button class="dropdown-header" aria-expanded="false" onclick="toggleDropdown(this)">
+      <span class="icon">🔒</span>
+      <span class="label">การขอ License Ritta pyRevit</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="dropdown-content">
+      <div>
+        <a href="https://www.youtube.com/watch?v=yvffrxj1D9E" target="_blank" rel="noopener" class="simple-btn">
+          <span class="btn-emoji">🎥</span><span class="btn-text">วิดีโอการขอ License Ritta pyRevit</span>
+          <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </a>
+        <a href="https://rittatools.getgrist.com/forms/ttbETkjaYiZaECPzp7tP4v/41" target="_blank" rel="noopener" class="simple-btn">
+          <span class="btn-emoji">📖</span><span class="btn-text">ฟอร์มลงทะเบียนขอรับ License</span>
+          <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. เครื่องมือ -->
+  <section class="section rise" style="--d:.32s">
+    <button class="dropdown-header" aria-expanded="false" onclick="toggleDropdown(this)">
+      <span class="icon">⚒️</span>
+      <span class="label">เครื่องมือ Ritta pyRevit</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="dropdown-content">
+      <div>
+        <a href="https://rittacoth-my.sharepoint.com/:p:/g/personal/phacharakorn_ritta_co_th/IQCILlKBrGmhSIoJwQVZBBX3AQJ5lYVs2DPquNMarjGtf3M?e=WZtqA3" target="_blank" rel="noopener" class="simple-btn">
+          <span class="btn-emoji">📋</span><span class="btn-text">คู่มือการใช้งาน Add-in Ritta</span>
+          <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. KPI Modeler -->
+  <section class="section rise" style="--d:.4s">
+    <button class="dropdown-header" aria-expanded="false" onclick="toggleDropdown(this)">
+      <span class="icon">📊</span>
+      <span class="label">RITTA BQC – KPI Modeler</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="dropdown-content">
+      <div>
+        <a href="https://rittacoth.sharepoint.com/:b:/s/BIMResearchDevelopment/IQA9xpKXKfyLR4-I06y0O0aEAbO6m_omshwr-tdoJH-TyRk?e=fGwRO4" target="_blank" rel="noopener" class="simple-btn">
+          <span class="btn-emoji">📩</span><span class="btn-text">KPI Modeler หัวข้อการตรวจ</span>
+          <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </a>
+        <a href="https://rittacoth.sharepoint.com/:p:/s/BIMResearchDevelopment/IQBme2H0UT4KRpc7UI9Zg_ovASLeVcPEJw5OW-5gjaxWFNw?e=gJpXFr" target="_blank" rel="noopener" class="simple-btn">
+          <span class="btn-emoji">🧩</span><span class="btn-text">การตรวจ KPI ด้วยตัวเอง (pyRevit + Power BI)</span>
+          <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </a>
+        <a href="https://rittacoth-my.sharepoint.com/:v:/g/personal/phacharakorn_ritta_co_th/IQDSxIan3oNaQYxbTbRVFPIoAT_P86dJ8tFCmyAfAOdMBrE?e=yeUB5F" target="_blank" rel="noopener" class="simple-btn">
+          <span class="btn-emoji">🎥</span><span class="btn-text">วิดีโอการตรวจ KPI ด้วยตัวเอง</span>
+          <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Line OA -->
+  <section class="section rise" style="--d:.48s">
+    <button class="dropdown-header" aria-expanded="false" onclick="toggleDropdown(this)">
+      <span class="icon">💬</span>
+      <span class="label">มีปัญหาการใช้งาน ติดต่อ Line OA</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="dropdown-content">
+      <div>
+        <a href="https://line.me/R/ti/p/%40748afrxu?oat__id=1218305" target="_blank" rel="noopener" class="simple-btn">
+          <span class="btn-emoji">💬</span><span class="btn-text">เพิ่มเพื่อน Line Official</span>
+          <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ท้ายหน้า -->
+  <div class="footer rise" style="--d:.58s">
+    <a href="#" class="footer-btn">We make the impossible<strong>POSSIBLE</strong></a>
+    <p class="note">RITTA BIM Research &amp; Development</p>
+  </div>
+
+</div>
+
+<script>
+function toggleDropdown(header){
+  const isOpen = header.getAttribute('aria-expanded') === 'true';
+
+  document.querySelectorAll('.dropdown-header').forEach(h => {
+    h.setAttribute('aria-expanded', 'false');
+  });
+
+  if(!isOpen){
+    header.setAttribute('aria-expanded', 'true');
+  }
+}
+
+/* แสงนุ่มวิ่งตามเมาส์บนแถบหัวข้อ */
+document.querySelectorAll('.dropdown-header').forEach(h => {
+  h.addEventListener('pointermove', e => {
+    const r = h.getBoundingClientRect();
+    h.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    h.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  });
+});
+</script>
 </body>
 </html>
